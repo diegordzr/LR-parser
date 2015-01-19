@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
@@ -9,88 +8,63 @@ namespace LR1
 	{
 		public static void Main (string[] args)
 		{
-			//var patternFullProduction = @"[A-Za-z]+'? *-> *([A-Za-z|] *)+";
-			string[] Gp = new [] {
+            var gramarG = new[] {
 				"S' -> S", 
 				"S -> C C",
 				"C -> c C | d"
 			};
-
-
-
-//			var enhanced = new []{"S' -> .S, $"};
-
-//			var dos = "S -> .C C, $";
-//
-//			var elements = GetElements(dos);
-//
-//			var A = elements[0];
-//			var alpha = elements [1];
-//			var B = elements [2];
-//			var beta = elements [3];
-//			var a = elements [4];
-//			var I = Closure(enhanced, Gp);
-//
-//			var J = GoTo(new []{"S -> .C C, $"}, "C", Gp);
-
-			Elements (Gp);
-
+			Items (gramarG);
 		}
 
-
-
-
-		public static string[] Closure(string[] Iset, string[] Gp){
-			var I = new List<string>(Iset);
-//			int oldCount = 0;
-//			do {
-				for (var i = 0; i < I.Count; i++) {
-					//oldCount = I.Count();
-					var elements = GetElements(I[i]);
-					var B = elements [2];
-					var beta = elements [3];
-					var a = elements [4];
-					foreach(var gama in GetGama(B, Gp)){
-						foreach(var b in First(new []{ beta, a }, Gp)){
-							var prod = B + " -> ." + gama + ", " +  b;
-							I.Add(prod);
-						}
+        public static string[] Closure(string[] sI, string[] gramarGp)
+        {
+			var I = new List<string>(sI);
+			for (var i = 0; i < I.Count; i++) {
+				var elements = GetElements(I[i]);
+				var eB = elements [2];
+				var beta = elements [3];
+				var a = elements [4];
+                foreach (var gama in GetGama(eB, gramarGp)){
+                    foreach (var b in First(new[] { beta, a }, gramarGp)){
+						var prod = eB + " -> ." + gama + ", " +  b;
+						I.Add(prod);
 					}
 				}
-
-//			}
-//			while(oldCount != I.Count());
+			}
 			return I.ToArray();
 		}
 
-		public static string[] GoTo(string[] I, string X, string[] Gp){
-			var J = new List<string>();
+		public static string[] GoTo(string[] I, string x, string[] gramarGp){
+			var j = new List<string>();
 			foreach(var prod in I){
 				var elements = GetElements (prod);
-				var A = elements[0];
+				var eA = elements[0];
 				var alpha = elements [1];
+			    var eX = elements[2];
 				var beta = elements [3];
 				var a = elements [4];
-				//A -> αX.β, a
-				//var newElement = string.Format("{0} ->{1} {2} .{3}, {4}", A, alpha, X, beta, a);
-				var newElement = MakeProduction (A, alpha, X, beta, a);
-				J.Add (newElement);
+			    if (!string.IsNullOrEmpty(x) && eX == x)
+			    {
+			        //A -> αX.β, a
+			        var newElement = MakeProduction(eA, alpha, x, beta, a);
+			        j.Add(newElement);
+			    }
 			}
-			return Closure (J.ToArray(), Gp);
+            return Closure(j.ToArray(), gramarGp);
 		}
 
-		static void Elements(string[] Gp){
-			var C = new List<string[]>();
-			var n = Closure (new[]{ "S' -> .S, $" }, Gp);
-			C.Add(n);
-			for (var i = 0; i < C.Count; i++){
-				var I = C [i];
+		static void Items(string[] gramarGp){
+			var sC = new List<string[]>();
+            var n = Closure(new[] { "S' -> .S, $" }, gramarGp);
+			sC.Add(n);
+			for (var i = 0; i < sC.Count; i++){
+				var I = sC[i];
 				foreach (var prod in I) {
 					var elements = GetElements (prod);
-					var X = elements [2];
-					var itemSet = GoTo(new[]{prod}, X, Gp);
-					if(itemSet.Any() && !ContainsItemsSet(C, itemSet)) {
-						C.Add (itemSet);
+					var x = elements [2];
+                    var itemSet = GoTo(I, x, gramarGp);
+					if(itemSet.Any() && !ContainsItemsSet(sC, itemSet)) {
+						sC.Add (itemSet);
 					}
 				}
 			}
@@ -179,7 +153,7 @@ namespace LR1
 			const string patternElement = @"[A-Za-z.$]+'?";
 			const string patternAlpha = @"( )*[A-Za-z]+( )*\.";
 			const string patternBbeta = @"\.[A-Za-z ]+";
-			const string pattern_a = @",[A-Za-z\/$ ]+";
+			const string aPattern = @",[A-Za-z\/$ ]+";
 
 			var matches = Regex.Matches(production, patternElement).Cast<Match>().Select(m=>m.Value);
 			var matchesBbeta = Regex.Matches (production, patternBbeta).Cast<Match>().Select(m=>m.Value);
@@ -199,7 +173,7 @@ namespace LR1
 					beta = elementBbeta.Split (' ') [1];
 			}
 
-			var a = Regex.Matches (production, pattern_a).Cast<Match> ().Select (m => m.Value).FirstOrDefault();
+            var a = Regex.Matches(production, aPattern).Cast<Match>().Select(m => m.Value).FirstOrDefault();
 
 			if (alpha != null) {
 				alpha = alpha.Replace(".",string.Empty).Trim();
@@ -207,11 +181,8 @@ namespace LR1
 			if (elementB != null) {
 				elementB = elementB.Replace (".", string.Empty).Trim();
 			}
-			if (a != null) {
-				a = a.Replace (",", string.Empty).Trim();
-			} else {
-				a = "$";
-			}
+			a = a != null ? 
+                a.Replace (",", string.Empty).Trim() : "$";
 				
 			return new []{ elementA, alpha, elementB, beta, a};
 		}
@@ -239,13 +210,13 @@ namespace LR1
 	    }
 
 
-		private static string MakeProduction(string A, string alpha, string X, string beta, string a){
-			var prod = A + " ->"; 
+		private static string MakeProduction(string elementA, string alpha, string x, string beta, string a){
+            var prod = elementA + " ->"; 
 			if (alpha != null)
 				prod += " " + alpha;
-		    if (X != null)
+		    if (x != null)
 		    {
-		        prod += " " + X;
+		        prod += " " + x;
 		    }
             prod += ".";
 		    if (beta != null)
