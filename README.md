@@ -13,10 +13,9 @@ Compilers: Principles, Techniques, and Tools
 
 Example 4.54
 
-S' -> S
-S -> C C
-C -> c C | d
-
+    S' -> S
+    S -> C C
+    C -> c C | d
 
 
 
