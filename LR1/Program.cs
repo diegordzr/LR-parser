@@ -53,7 +53,6 @@ namespace LR1
 					foreach(var gama in GetGama(B, Gp)){
 						foreach(var b in First(new []{ beta, a }, Gp)){
 							var prod = B + " -> ." + gama + ", " +  b;
-							prod = Regex.Replace (prod, @"( )*\.( )*", ".");
 							I.Add(prod);
 						}
 					}
@@ -73,8 +72,8 @@ namespace LR1
 				var beta = elements [3];
 				var a = elements [4];
 				//A -> αX.β, a
-				var newElement = string.Format("{0} ->{1} {2} .{3}, {4}", A, alpha, X, beta, a);
-				//var newElement = MakeProduction (A, alpha, X, beta, a);
+				//var newElement = string.Format("{0} ->{1} {2} .{3}, {4}", A, alpha, X, beta, a);
+				var newElement = MakeProduction (A, alpha, X, beta, a);
 				J.Add (newElement);
 			}
 			return Closure (J.ToArray(), Gp);
@@ -82,7 +81,7 @@ namespace LR1
 
 		static void Elements(string[] Gp){
 			var C = new List<string[]>();
-			var n = Closure (new[]{ "S' ->.S, $" }, Gp);
+			var n = Closure (new[]{ "S' -> .S, $" }, Gp);
 			C.Add(n);
 			for (var i = 0; i < C.Count; i++){
 				var I = C [i];
@@ -127,8 +126,8 @@ namespace LR1
 		}
 
 		public static string[] First(string production){
-			var patternTerminal1 = @"->( )*[a-z]+";
-			var patternTerminal2 = @"\|( )*[a-z]+";
+			const string patternTerminal1 = @"->( )*[a-z]+";
+			const string patternTerminal2 = @"\|( )*[a-z]+";
 
 			var terminal = Regex.Matches (production, patternTerminal1).Cast<Match>().Select(m => m.Value);
 			var terminals = Regex.Matches(production, patternTerminal2).Cast<Match>().Select(m=>m.Value);
@@ -157,8 +156,8 @@ namespace LR1
 
 
 		public static string[] GetGama(string production){
-			var patternTerminal1 = @"->( )*[A-Za-z ]+";
-			var patternTerminal2 = @"\|( )*[A-Za-z ]+";
+			const string patternTerminal1 = @"->( )*[A-Za-z ]+";
+			const string patternTerminal2 = @"\|( )*[A-Za-z ]+";
 
 			var terminal = Regex.Matches (production, patternTerminal1).Cast<Match>().Select(m => m.Value);
 			var terminals = Regex.Matches(production, patternTerminal2).Cast<Match>().Select(m=>m.Value);
@@ -170,23 +169,17 @@ namespace LR1
 			return listTerminals.ToArray();
 		}
 
-		public static bool IsTerminal(string element){
-			for (int i = 0; i < element.Length; i++)
-			{
-				if (char.IsUpper(element[i]))
-				{
-					return false;
-				}
-			}
-			return true;
+		public static bool IsTerminal(string element)
+		{
+		    return element.All(t => !char.IsUpper(t));
 		}
 
-		//[A -> α.Bβ, a]
+	    //[A -> α.Bβ, a]
 		public static string[] GetElements(string production){
-			var patternElement = @"[A-Za-z.$]+'?";
-			var patternAlpha = @"( )*[A-Za-z]+( )*\.";
-			var patternBbeta = @"\.[A-Za-z ]+";
-			var pattern_a = @",[A-Za-z\/$ ]+";
+			const string patternElement = @"[A-Za-z.$]+'?";
+			const string patternAlpha = @"( )*[A-Za-z]+( )*\.";
+			const string patternBbeta = @"\.[A-Za-z ]+";
+			const string pattern_a = @",[A-Za-z\/$ ]+";
 
 			var matches = Regex.Matches(production, patternElement).Cast<Match>().Select(m=>m.Value);
 			var matchesBbeta = Regex.Matches (production, patternBbeta).Cast<Match>().Select(m=>m.Value);
@@ -223,22 +216,41 @@ namespace LR1
 			return new []{ elementA, alpha, elementB, beta, a};
 		}
 
-		public static bool ContainsItemsSet(IEnumerable<string[]> itemsSet, string[] item){
-			foreach(var i in itemsSet){
-				if(i.Equals(item))
-					return true;
-			}
-			return false;
-		}
+		public static bool ContainsItemsSet(List<string[]> itemsSet, string[] item)
+        {
+		    for (var i = 0; i < itemsSet.Count(); i++)
+		    {
+		        if(AreEqual(itemsSet[i], item))
+		            return true;
+		    }
+		    return false;
+        }
+
+	    public static bool AreEqual(string[] array1, string[] array2)
+	    {
+	        if (array1.Count() != array2.Count())
+	            return false;
+	        for (var i = 0; i < array1.Count(); i++)
+	        {
+	            if (array1[i] != array2[i])
+	                return false;
+	        }
+	        return true;
+	    }
+
 
 		private static string MakeProduction(string A, string alpha, string X, string beta, string a){
 			var prod = A + " ->"; 
 			if (alpha != null)
-				prod += alpha;
-			if (X != null)
-				prod += "." + X;
-			if (beta != null)
-				prod += " " + beta;
+				prod += " " + alpha;
+		    if (X != null)
+		    {
+		        prod += " " + X;
+		    }
+            prod += ".";
+		    if (beta != null)
+				prod += beta;
+
 			prod += ", " + a;
 			return prod;
 		}

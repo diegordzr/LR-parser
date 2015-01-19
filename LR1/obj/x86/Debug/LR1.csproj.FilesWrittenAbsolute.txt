@@ -1,5 +1,0 @@
-/Users/diegorodriguez/Documents/Developer/net/LR1/LR1/obj/x86/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
-/Users/diegorodriguez/Documents/Developer/net/LR1/LR1/bin/Debug/LR1.exe.mdb
-/Users/diegorodriguez/Documents/Developer/net/LR1/LR1/bin/Debug/LR1.exe
-/Users/diegorodriguez/Documents/Developer/net/LR1/LR1/obj/x86/Debug/LR1.exe
-/Users/diegorodriguez/Documents/Developer/net/LR1/LR1/obj/x86/Debug/LR1.exe.mdb
