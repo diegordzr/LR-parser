@@ -10,7 +10,6 @@ namespace LR1
 		private const string _terminalPattern = "[a-z]+";
 		private const string _noTerminalPattern = "[A-Z]+";
 		private const string _producePattern = "->";
-		private const string _orPattern = "|";
 
 
 		public static string[] First(string[] elements, string[] gramar){
@@ -44,13 +43,13 @@ namespace LR1
 
 		public static string[] First(string production){
 			string patternTerminal1 = string.Format("{0}( )*{1}", _producePattern, _terminalPattern);
-			string patternTerminal2 = string.Format("{1}( )*{0}", _orPattern, _terminalPattern);
+			string patternTerminal2 = string.Format("\\|( )*{0}", _terminalPattern);
 
 			var terminal = Regex.Matches (production, patternTerminal1).Cast<Match>().Select(m => m.Value);
 			var terminals = Regex.Matches(production, patternTerminal2).Cast<Match>().Select(m=>m.Value);
 
 			terminal = terminal.Select(t => t.Replace(_producePattern, string.Empty).Trim());
-			terminals = terminals.Select(t => t.Replace(_orPattern, string.Empty).Trim());
+			terminals = terminals.Select(t => t.Replace("|", string.Empty).Trim());
 
 			var listTerminals = terminal.Union(terminals).ToList();
 			if (!listTerminals.Any ())
@@ -74,13 +73,13 @@ namespace LR1
 
 		public static string[] GetGama(string production){
 			string patternTerminal1 = string.Format ("{0}( )*({1}|{2}| )+", _producePattern, _terminalPattern, _noTerminalPattern);
-			string patternTerminal2 = string.Format ("{0}( )*({1}|{2}| )+", _orPattern, _terminalPattern, _noTerminalPattern);
+			string patternTerminal2 = string.Format ("\\|( )*({0}|{1}| )+", _terminalPattern, _noTerminalPattern);
 
 			var terminal = Regex.Matches (production, patternTerminal1).Cast<Match>().Select(m => m.Value);
 			var terminals = Regex.Matches(production, patternTerminal2).Cast<Match>().Select(m=>m.Value);
 
 			terminal = terminal.Select(t => t.Replace(_producePattern, string.Empty).Trim());
-			terminals = terminals.Select(t => t.Replace(_orPattern, string.Empty).Trim());
+			terminals = terminals.Select(t => t.Replace("|", string.Empty).Trim());
 
 			var listTerminals = terminal.Union(terminals).ToList();
 			return listTerminals.ToArray();

@@ -1,13 +1,24 @@
 ﻿<Properties StartupItem="LR1/LR1.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="LR1/Tools.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="LR1/Program.cs">
     <Files>
-      <File FileName="LR1/Program.cs" Line="3" Column="3" />
-      <File FileName="LR1/Tools.cs" Line="7" Column="7" />
+      <File FileName="LR1/Program.cs" Line="15" Column="15" />
+      <File FileName="LR1/Tools.cs" Line="36" Column="36" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="LR1" expanded="True">
+            <Node name="Tools.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/diegorodriguez/Documents/GitHub Repositories/LR-parser/LR1/Program.cs" line="39" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
