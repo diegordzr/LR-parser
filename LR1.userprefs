@@ -1,19 +1,10 @@
 ﻿<Properties StartupItem="LR1/LR1.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="LR1/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="LR1/Tools.cs">
     <Files>
-      <File FileName="LR1/Program.cs" Line="15" Column="15" />
-      <File FileName="LR1/Tools.cs" Line="36" Column="36" />
+      <File FileName="LR1/Program.cs" Line="1" Column="1" />
+      <File FileName="LR1/Tools.cs" Line="52" Column="52" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="LR1" expanded="True">
-            <Node name="Tools.cs" selected="True" />
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
