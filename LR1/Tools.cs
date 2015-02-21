@@ -150,10 +150,13 @@ namespace LR1
 			return false;
 		}
 
-		public static int IndexOfGramar(string[] gramar, string production){
+		public static int IndexOfGramar(string[] gramar, string production) {
+			int pos = production.IndexOf (',');
+			production = production.Remove (pos - 1);
+
 			for (var i = 0; i < gramar.Count(); i++)
 			{
-				if(production == gramar[i]){
+				if(production.Trim() == gramar[i].Trim()){
 					return i;
 				}
 			}
@@ -371,7 +374,7 @@ namespace LR1
 			{
 				if (band)
 					retLength++;
-				if (elemen == "->")                
+				if (elemen == _produceElement)                
 					band = true;
 				if (!band)
 					pater = elemen;
@@ -397,7 +400,7 @@ namespace LR1
 						retElements = retElements + " ";
 					retElements = retElements + pat;
 				}
-				if (pat == "->")
+				if (pat == _produceElement)
 					band = true;
 			}
 			return retElements.Trim();
@@ -429,9 +432,9 @@ namespace LR1
 
 		public static string FirstProduction(string cadena)
 		{
-			cadena = cadena + ", $";
-			int posfle = cadena.IndexOf(_produceElement);
-			cadena = cadena.Remove(posfle + 2, 1).Insert(posfle + 2, " .");
+			var a = GetElements (cadena)[0];
+			var gama = GetGama (cadena)[0];
+			cadena = string.Format("{0} {1} .{2}, $", a, _produceElement, gama);
 			return cadena;
 		}
 	}

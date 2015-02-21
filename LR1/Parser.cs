@@ -18,7 +18,8 @@ namespace LR1
 				foreach (var gama in Tools.GetGama(eB, gramarGp)){
 					foreach (var b in Tools.First(aBeta, gramarGp)){
 						var prod = Tools.MakeProduction(eB, gama, b);
-						I.Add(prod);
+						if(!I.Contains(prod))
+							I.Add(prod);
 					}
 				}
 			}
@@ -39,7 +40,8 @@ namespace LR1
 				{
 					//A -> αX.β, a
 					var newElement = Tools.MakeProduction(eA, alpha, x, beta, a);
-					j.Add(newElement);
+					if (!j.Contains(newElement))
+						j.Add(newElement);
 				}
 			}
 			return Closure(j.ToArray(), gramarGp);
@@ -48,7 +50,6 @@ namespace LR1
 		public static ICollection<string[]> Items(string[] gramarGp){
 			var sC = new List<string[]>();
 			string first = Tools.FirstProduction(gramarGp[0]);
-
 			var n = Closure(new[] { first }, gramarGp);
 			sC.Add(n);
 			for (var i = 0; i < sC.Count; i++){
@@ -68,6 +69,7 @@ namespace LR1
 		public static string[,] LRTable(List<string[]> setC, string[] gramarGp){
 			var terminals = Tools.GetTerminals(gramarGp);
 			var noTerminals = Tools.GetNoTerminals (gramarGp);
+
 			var tokens = terminals.Union (noTerminals).ToArray();
 			var action = new string[setC.Count(), tokens.Count()];
 

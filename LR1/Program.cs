@@ -8,24 +8,33 @@ namespace LR1
 	{
 		public static void Main (string[] args)
 		{
-			var gramatica = 
-				"\nS' -> S\n" +
-				"S -> C C\n" +
-				"C -> c C | d\n";
+//			var gramatica = 
+//				"\nS' : S\n" +
+//				"S : C C\n" +
+//				"C : `c` C | `d`";
 				
 			//Gramatica que se cicla
-			gramatica = "exp_entera' : exp_entera\n" +
-				"exp_entera: TOK_ENTERO" +
-				"|exp_entera `+` exp_entera" +
-				"|exp_entera `-` exp_entera" +
-				"|exp_entera `*` exp_entera" +
-				"|`(` exp_entera `)` \n" +
-			"exp_real: TOK_REAL" +
-			"|exp_real `+` exp_real" +
-			"|exp_real `-` exp_real" +
-			"|exp_real `*` exp_real" +
-			"|exp_real `/` exp_real" +
-			"|`(` exp_real `)`\n";
+//			var gramatica = "lineas' : lineas\n" +
+//				"lineas : linea"+
+//				"|lineas linea\n" +
+//				"linea: exp_entera " +
+//				"| exp_real\n" +
+//				"exp_entera: `entero`" +
+//				"|exp_entera `+` exp_entera" +
+//				"|exp_entera `-` exp_entera" +
+//				"|exp_entera `*` exp_entera" +
+//				"|`(` exp_entera `)` \n" +
+//			"exp_real: `real`" +
+//			"|exp_real `+` exp_real" +
+//			"|exp_real `-` exp_real" +
+//			"|exp_real `*` exp_real" +
+//			"|exp_real `/` exp_real" +
+//			"|`(` exp_real `)`\n";
+
+
+			var gramatica = "E' : E\n"+
+				"E : E `+` `n`\n" +
+				"E : `n`";
 
 				
 				
@@ -56,16 +65,22 @@ namespace LR1
 			var tableAction = Parser.LRTable(setC, gramarG);
 
 
-			foreach(var row in tableAction) {
-				if (row == null) {
-					System.Console.Write("\t\t");
-					continue;
+		
+			var terminals = Tools.GetTerminals(gramarG);
+			var noTerminals = Tools.GetNoTerminals (gramarG);
+			var tokens = terminals.Union (noTerminals).ToArray();
+
+			System.Console.Write ("\t");
+			foreach(var token in tokens){
+				System.Console.Write (token + "\t");
+			}
+			System.Console.Write("\n");
+			for(int i = 0; i < tableAction.GetLength(0); i++){
+				System.Console.Write (i + "\t");
+				for(int j = 0; j < tableAction.GetLength(1); j++){
+					System.Console.Write (tableAction[i,j] + "\t");
 				}
-				foreach(var cell in row){
-					System.Console.Write (cell);
-					System.Console.Write ("\t");
-				}
-				System.Console.WriteLine();
+				System.Console.Write ("\n");
 			}
 		}
 
